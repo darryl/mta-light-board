@@ -1,0 +1,219 @@
+<!doctype html>
+<html>
+  <head>
+    <title>L Trains</title>
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      body { font: 13px Helvetica, Arial;
+             font-weight: bold;
+             color: white;
+             
+             background-repeat: no-repeat; 
+             background-color: black;}
+  
+      .lights {position: absolute; top: 241px; left: 15px;}
+
+      	.grey-bar {
+	        width:70%;
+            height:10px;
+            background-color:#797d7c;
+            margin-left:18px;
+            padding:1px;
+            padding-left:3px;
+        }
+        .station-circle{
+			padding-top: 1px;
+        	width:8px;
+        	margin-right:18px;
+        	margin-left:0px;
+        	height:8px;
+        	border-radius: 50%;
+        	background-color: #000;
+	    }
+	    .pull-left{
+	    	float:left;
+	    }
+	    .rotate {
+	    	transform: translateX(-15px) translateY(157px) rotate(-49deg);
+	    	font-size: .8em;
+	    	color:#DDD;
+	    	width: 200px;
+	    	margin-right: -173.9px;
+		}
+		.stop-box {
+			height:245px;
+		}
+		.station{
+			height: 60px;
+			width: 60px;
+			border-radius: 50%;
+			color:FFF;
+			text-align: center;
+			vertical-align: middle;
+			font-size: 3.8em;
+		}
+		.station div {
+		}
+		.station-l{
+			background-color: #999;
+		}
+
+	    </style>
+  </head>
+  <body>
+    <div class='station station-l'>L</div>
+
+  	<div class='stop-box'>
+		<div class='rotate pull-left'>14 St-Union Sq </div>
+		<div class='rotate pull-left'>14 St-Union Sq </div>
+		<div class='rotate pull-left'>14 St-Union Sq </div>
+		<div class='rotate pull-left'>14 St-Union Sq </div>
+		<div class='rotate pull-left'>14 St-Union Sq </div>
+		<div class='rotate pull-left'>14 St-Union Sq </div>
+		<div class='rotate pull-left'>14 St-Union Sq </div>
+		<div class='rotate pull-left'>14 St-Union Sq </div>
+		<div class='rotate pull-left'>14 St-Union Sq </div>
+		<div class='rotate pull-left'>14 St-Union Sq </div>
+		<div class='rotate pull-left'>14 St-Union Sq </div>
+		<div class='rotate pull-left'>14 St-Union Sq </div>
+		<div class='rotate pull-left'>14 St-Union Sq </div>
+		<div class='rotate pull-left'>14 St-Union Sq </div>
+		<div class='rotate pull-left'>14 St-Union Sq </div>
+		<div class='rotate pull-left'>14 St-Union Sq </div>
+		<div class='rotate pull-left'>14 St-Union Sq </div>
+		<div class='rotate pull-left'>14 St-Union Sq </div>
+		<div class='rotate pull-left'>14 St-Union Sq </div>
+		<div class='rotate pull-left'>14 St-Union Sq </div>
+	</div>
+
+	</div>
+
+  	<div class='grey-bar'>
+  		<div class='station-circle pull-left'></div>
+  		<div class='station-circle pull-left'></div>
+  		<div class='station-circle pull-left'></div>
+  		<div class='station-circle pull-left'></div>
+  		<div class='station-circle pull-left'></div>
+  		<div class='station-circle pull-left'></div>
+  		<div class='station-circle pull-left'></div>
+  		<div class='station-circle pull-left'></div>
+  		<div class='station-circle pull-left'></div>
+  		<div class='station-circle pull-left'></div>
+  		<div class='station-circle pull-left'></div>
+  		<div class='station-circle pull-left'></div>
+  		<div class='station-circle pull-left'></div>
+  		<div class='station-circle pull-left'></div>
+  		<div class='station-circle pull-left'></div>
+  		<div class='station-circle pull-left'></div>
+  		<div class='station-circle pull-left'></div>
+  		<div class='station-circle pull-left'></div>
+  		<div class='station-circle pull-left'></div>
+  		<div class='station-circle pull-left'></div>
+  	</div>
+
+<img src="/light.png" class="lights"></img>
+<ul id="messages"></ul>
+  
+<script src="/socket.io/socket.io.js"></script>
+<script src="http://code.jquery.com/jquery-1.11.1.js"></script>
+
+<!--
+L01,8 Av,40.739777,-74.002578,1,
+L01N,8 Av,40.739777,-74.002578,,L01
+L01S,8 Av,40.739777,-74.002578,,L01
+L02,6 Av,40.737335,-73.996786,1,
+L02N,6 Av,40.737335,-73.996786,,L02
+L02S,6 Av,40.737335,-73.996786,,L02
+L03,Union Sq - 14 St,40.734789,-73.990730,1,
+L03N,Union Sq - 14 St,40.734789,-73.990730,,L03
+L03S,Union Sq - 14 St,40.734789,-73.990730,,L03
+L05,3 Av,40.732849,-73.986122,1,
+L05N,3 Av,40.732849,-73.986122,,L05
+L05S,3 Av,40.732849,-73.986122,,L05
+L06,1 Av,40.730953,-73.981628,1,
+L06N,1 Av,40.730953,-73.981628,,L06
+L06S,1 Av,40.730953,-73.981628,,L06
+L08,Bedford Av,40.717304,-73.956872,1,
+L08N,Bedford Av,40.717304,-73.956872,,L08
+L08S,Bedford Av,40.717304,-73.956872,,L08
+L10,Lorimer St,40.714063,-73.950275,1,
+L10N,Lorimer St,40.714063,-73.950275,,L10
+L10S,Lorimer St,40.714063,-73.950275,,L10
+L11,Graham Av,40.714565,-73.944053,1,
+L11N,Graham Av,40.714565,-73.944053,,L11
+L11S,Graham Av,40.714565,-73.944053,,L11
+L12,Grand St,40.711926,-73.940670,1,
+L12N,Grand St,40.711926,-73.940670,,L12
+L12S,Grand St,40.711926,-73.940670,,L12
+L13,Montrose Av,40.707739,-73.939850,1,
+L13N,Montrose Av,40.707739,-73.939850,,L13
+L13S,Montrose Av,40.707739,-73.939850,,L13
+L14,Morgan Av,40.706152,-73.933147,1,
+L14N,Morgan Av,40.706152,-73.933147,,L14
+L14S,Morgan Av,40.706152,-73.933147,,L14
+L15,Jefferson St,40.706607,-73.922913,1,
+L15N,Jefferson St,40.706607,-73.922913,,L15
+L15S,Jefferson St,40.706607,-73.922913,,L15
+L16,DeKalb Av,40.703811,-73.918425,1,
+L16N,DeKalb Av,40.703811,-73.918425,,L16
+L16S,DeKalb Av,40.703811,-73.918425,,L16
+L17,Myrtle - Wyckoff Avs,40.699814,-73.911586,1,
+L17N,Myrtle - Wyckoff Avs,40.699814,-73.911586,,L17
+L17S,Myrtle - Wyckoff Avs,40.699814,-73.911586,,L17
+L19,Halsey St,40.695602,-73.904084,1,
+L19N,Halsey St,40.695602,-73.904084,,L19
+L19S,Halsey St,40.695602,-73.904084,,L19
+L20,Wilson Av,40.688764,-73.904046,1,
+L20N,Wilson Av,40.688764,-73.904046,,L20
+L20S,Wilson Av,40.688764,-73.904046,,L20
+L21,Bushwick Av - Aberdeen St,40.682829,-73.905249,1,
+L21N,Bushwick Av - Aberdeen St,40.682829,-73.905249,,L21
+22,Broadway Jct,40.678856,-73.903240,1,
+L22N,Broadway Jct,40.678856,-73.903240,,L22
+L22S,Broadway Jct,40.678856,-73.903240,,L22
+L24,Atlantic Av,40.675345,-73.903097,1,
+L24N,Atlantic Av,40.675345,-73.903097,,L24
+L24S,Atlantic Av,40.675345,-73.903097,,L24
+L25,Sutter Av,40.669367,-73.901975,1,
+L25N,Sutter Av,40.669367,-73.901975,,L25
+L25S,Sutter Av,40.669367,-73.901975,,L25
+L26,Livonia Av,40.664038,-73.900571,1,
+L26N,Livonia Av,40.664038,-73.900571,,L26
+L26S,Livonia Av,40.664038,-73.900571,,L26
+L27,New Lots Av,40.658733,-73.899232,1,
+L27N,New Lots Av,40.658733,-73.899232,,L27
+L27S,New Lots Av,40.658733,-73.899232,,L27
+L28,E 105 St,40.650573,-73.899485,1,
+L28N,E 105 St,40.650573,-73.899485,,L28
+L28S,E 105 St,40.650573,-73.899485,,L28
+L29,Canarsie - Rockaway Pkwy,40.646654,-73.901850,1,
+L29N,Canarsie - Rockaway Pkwy,40.646654,-73.901850,,L29
+L29S,Canarsie - Rockaway Pkwy,40.646654,-73.901850,,
+-->
+
+<script>
+  var socket = io();
+  var stops = [];
+  var stopPositions = {"01": 20, "02": 47, "03": 74, "05": 100, "06":
+  127, "08": 154, "10": 180, "11": 211, "12": 238, "13": 265, "14":
+  291, "15": 317, "16": 344, "17": 371, "19": 397, "20": 428, "21":
+  455, "22": 481, "24": 508, "25": 535, "26": 561, "27": 587, "28":
+  619, "29": 645}
+  socket.on('feed update', function(msg){
+    $('.lights').remove();
+    for (i = 0; i < msg.length; i += 1){
+      var station = msg[i];
+      stopNumber = station.substr(1,2);
+      stopPosition = stopPositions[stopNumber] - 5; 
+      $('body').append($('<img src="/light.png" class="lights" id="' +
+        station + '" style="left: ' + stopPosition + 'px;" title="' +
+        station + '">'));
+    }
+    console.log(msg)
+  });
+</script>
+
+  </body>
+</html>
+
+
