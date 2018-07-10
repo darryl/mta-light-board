@@ -2,9 +2,9 @@
 
 Getting to know the MTA's GTFS realtime schedule info
 
-[screenshot](./screenshot.png)
+![screenshot](./screenshot.png)
 
-## setup
+## Setup
 
 ```
 npm install
