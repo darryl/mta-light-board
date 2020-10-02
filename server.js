@@ -1,13 +1,13 @@
 var dotenv = require('dotenv');
 dotenv.load();
 var MTA_KEY     = process.env.MTA_KEY;
-var MTA_FEED_ID = 2; // L Train feed id
+// var MTA_FEED_ID = 2; // L Train feed id
 var PORT        = process.env.PORT || 3000;
-var URL         = "http://datamine.mta.info/mta_esi.php?key=" + MTA_KEY
-    + "&feed_id=" + MTA_FEED_ID;
+var URL         = "https://api-endpoint.mta.info/Dataservice/mtagtfsfeeds/nyct%2Fgtfs-l"
+
 var UPDATE_INTERVAL = process.env.UPDATE_INTERVAL || 60*5;
 
-var http = require("http");
+var http = require("https");
 var express = require('express');
 var app = express();
 
@@ -26,7 +26,7 @@ var currentStops = [];
 
 // get data from mta
 var updateFeed = function(){
-    http.get(URL, function(res) { 
+    http.get(URL, {'headers' : {'x-api-key' : MTA_KEY}}, function(res) {
         var data;
         data = [];
         res.on("data", function(chunk) {
