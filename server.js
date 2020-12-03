@@ -1,16 +1,19 @@
-var dotenv = require(""dotenv");
-dotenv.load();
-var MTA_KEY     = process.env.MTA_KEY;
-var PORT        = process.env.PORT || 3000;
-var URL         = "https://api-endpoint.mta.info/Dataservice/mtagtfsfeeds/nyct%2Fgtfs-l"
+"use strict";
 
-var UPDATE_INTERVAL = process.env.UPDATE_INTERVAL || 60*5;
+var dotenv = require("dotenv");
+dotenv.load();
+var MTA_KEY = process.env.MTA_KEY;
+var PORT    = process.env.PORT || 3000;
+var URL     = "https://api-endpoint.mta.info" +
+    "/Dataservice/mtagtfsfeeds/nyct%2Fgtfs-l";
+
+var UPDATE_INTERVAL = process.env.UPDATE_INTERVAL || 60 * 5;
 
 var http = require("https");
 var express = require("express");
 var app = express();
 
-server = app.listen(PORT, function() {
+var server = app.listen(PORT, function () {
     console.log("Listening on port " + server.address().port + "...");
 });
 
@@ -24,14 +27,14 @@ var mtaFeed = "init";
 var currentStops = [];
 
 // get data from mta
-var updateFeed = function(){
-    http.get(URL, {"headers" : {"x-api-key" : MTA_KEY}}, function(res) {
+var updateFeed = function () {
+    http.get(URL, {"headers" : {"x-api-key" : MTA_KEY}}, function (res) {
         var data;
         data = [];
-        res.on("data", function(chunk) {
+        res.on("data", function (chunk) {
             return data.push(chunk);
         });
-        res.on("end", function() {
+        res.on("end", function () {
             data = Buffer.concat(data);
             mtaFeed = decoder.decode(data);
         });
@@ -43,47 +46,50 @@ updateFeed();
 var p = function(str){ console.log(str) }
 
 // return the closest stop to each train in an array
-trainPositions = function(fullFeed){
+var trainPositions = function(fullFeed){
     var nowish = Date.now() / 1000; // turn milliseconds into seconds
     var shortFeed = [];
 
-    for (i = 0; i < fullFeed.entity.length; i+= 1){
+    for (let i = 0; i < fullFeed.entity.length; i+= 1){
         // each trip
-        trip = fullFeed.entity[i].trip_update;
+        let trip = fullFeed.entity[i].trip_update;
         p(trip);
         if (typeof trip != "undefined" && trip != null){
             if (trip.stop_time_update != null){
-                
-	        train = trip.trip.nyct_trip_descriptor.train_id;
-                // direction enum NORTH = 1 EAST = 2 SOUTH = 3 WEST = 4 // mta only uses NORTH and SOUTH
-                direction = trip.trip.nyct_trip_descriptor.direction;
-                
+
+                let train = trip.trip.nyct_trip_descriptor.train_id;
+                // direction enum NORTH = 1 EAST = 2 SOUTH = 3 WEST = 4
+                // mta only uses NORTH and SOUTH
+                let direction = trip.trip.nyct_trip_descriptor.direction;
+
                 p("Parsing Train: " + train + " Direction: " + {1: "NORTH", 2: "EAST", 3: "SOUTH", 4: "WEST"}[direction]);
-                
+
                 var previousTimeDifference = nowish;
                 var previousStation = null;
                 // each stop
-                for (j = 0; j < trip.stop_time_update.length; j+=1){
-                    station = trip.stop_time_update[j];
-                    p()
+                for (let j = 0; j < trip.stop_time_update.length; j+=1){
+                    let station = trip.stop_time_update[j];
+                    let timeFromArrival, timeFromDeparture;
                     if (station.arrival) {
-                        timeFromArrival = Math.abs(nowish - station.arrival.time);
+                        timeFromArrival =
+                            Math.abs(nowish - station.arrival.time);
                     } else {
                         timeFromArrival = nowish;
                     }
                     if (station.departure) {
-                        timeFromDeparture = Math.abs(nowish - station.departure.time);
+                        timeFromDeparture =
+                            Math.abs(nowish - station.departure.time);
                     } else {
                         timeFromDeparture = nowish;
                     }
 
-                    time = Math.min(timeFromArrival, timeFromDeparture);
-                    if (previousTimeDifference > time){   // getting closer to train
+                    let time = Math.min(timeFromArrival, timeFromDeparture);
+                    if (previousTimeDifference > time){ // closer to train
                         previousTimeDifference = time;
                         previousStation = station.stop_id;
-                    } else if (previousTimeDifference <= time) { // missed the train
+                    } else if (previousTimeDifference <= time){ // missed train
                         shortFeed.push(previousStation);
-			                  p("Found Stop: " + previousStation);
+                        p("Found Stop: " + previousStation);
                         break;
                     }
                     // shortFeed.push(station.stop_id); // train is at last stop
@@ -91,7 +97,7 @@ trainPositions = function(fullFeed){
             }
         }
     }
-    p("shortFeed: " + shortFeed) 
+    p("shortFeed: " + shortFeed)
     return shortFeed;
 }
 
@@ -152,4 +158,3 @@ setInterval(function(){
     currentStops = trainPositions(mtaFeed);
     io.emit("feed update", currentStops);
 } , 10 * 1000)
-
