@@ -1,32 +1,31 @@
-var dotenv = require('dotenv');
+var dotenv = require(""dotenv");
 dotenv.load();
 var MTA_KEY     = process.env.MTA_KEY;
-// var MTA_FEED_ID = 2; // L Train feed id
 var PORT        = process.env.PORT || 3000;
 var URL         = "https://api-endpoint.mta.info/Dataservice/mtagtfsfeeds/nyct%2Fgtfs-l"
 
 var UPDATE_INTERVAL = process.env.UPDATE_INTERVAL || 60*5;
 
 var http = require("https");
-var express = require('express');
+var express = require("express");
 var app = express();
 
 server = app.listen(PORT, function() {
     console.log("Listening on port " + server.address().port + "...");
 });
 
-var io = require('socket.io')(server);
+var io = require("socket.io")(server);
 
 var ProtoBuf = require("protobufjs");
 var builder = ProtoBuf.loadProtoFile("proto-files/nyct-subway.proto");
 var decoder = builder.build("transit_realtime").FeedMessage;
 
-var mtaFeed = 'init';
+var mtaFeed = "init";
 var currentStops = [];
 
 // get data from mta
 var updateFeed = function(){
-    http.get(URL, {'headers' : {'x-api-key' : MTA_KEY}}, function(res) {
+    http.get(URL, {"headers" : {"x-api-key" : MTA_KEY}}, function(res) {
         var data;
         data = [];
         res.on("data", function(chunk) {
@@ -51,21 +50,22 @@ trainPositions = function(fullFeed){
     for (i = 0; i < fullFeed.entity.length; i+= 1){
         // each trip
         trip = fullFeed.entity[i].trip_update;
-        if (typeof trip != 'undefined' && trip != null){
+        p(trip);
+        if (typeof trip != "undefined" && trip != null){
             if (trip.stop_time_update != null){
                 
 	        train = trip.trip.nyct_trip_descriptor.train_id;
-                // direction enum NORTH = 1 EAST = 2 SOUTH = 3 WEST = 4
+                // direction enum NORTH = 1 EAST = 2 SOUTH = 3 WEST = 4 // mta only uses NORTH and SOUTH
                 direction = trip.trip.nyct_trip_descriptor.direction;
                 
-                p('Parsing Train: ' + train + ' Direction: ' + {1: 'NORTH', 2: 'EAST', 3: 'SOUTH', 4: 'WEST'}[direction]);
-
+                p("Parsing Train: " + train + " Direction: " + {1: "NORTH", 2: "EAST", 3: "SOUTH", 4: "WEST"}[direction]);
+                
                 var previousTimeDifference = nowish;
                 var previousStation = null;
                 // each stop
                 for (j = 0; j < trip.stop_time_update.length; j+=1){
                     station = trip.stop_time_update[j];
-                    
+                    p()
                     if (station.arrival) {
                         timeFromArrival = Math.abs(nowish - station.arrival.time);
                     } else {
@@ -83,7 +83,7 @@ trainPositions = function(fullFeed){
                         previousStation = station.stop_id;
                     } else if (previousTimeDifference <= time) { // missed the train
                         shortFeed.push(previousStation);
-			p('Found Stop: ' + previousStation);
+			                  p("Found Stop: " + previousStation);
                         break;
                     }
                     // shortFeed.push(station.stop_id); // train is at last stop
@@ -91,21 +91,21 @@ trainPositions = function(fullFeed){
             }
         }
     }
-    // p('shortFeed: ' + shortFeed) 
+    p("shortFeed: " + shortFeed) 
     return shortFeed;
 }
 
 // socket.io callback for new connections from browsers
-io.on('connection', function(socket){
-    console.log('a user connected');
-    socket.on('disconnect', function(){
-        console.log('user disconnected');
+io.on("connection", function(socket){
+    console.log("a user connected");
+    socket.on("disconnect", function(){
+        console.log("user disconnected");
     });
-    socket.emit('feed update', currentStops);
+    socket.emit("feed update", currentStops);
 });
 
 // shamelessly taken from mta2json
-app.get('/current-L.json', function(req, out) {
+app.get("/current-L.json", function(req, out) {
     return http.get(URL, function(res) {
         var data;
         data = [];
@@ -123,17 +123,17 @@ app.get('/current-L.json', function(req, out) {
 });
 
 // static assets
-app.get('/', function(req, res){
-    res.sendFile(__dirname + '/static-www/index.html');
+app.get("/", function(req, res){
+    res.sendFile(__dirname + "/static-www/index.html");
 });
 
-app.get('/:file', function(req, res) {
+app.get("/:file", function(req, res) {
     var options = {
-        root: __dirname + '/static-www/',
-        dotfiles: 'deny',
+        root: __dirname + "/static-www/",
+        dotfiles: "deny",
         headers: {
-            'x-timestamp': Date.now(),
-            'x-sent': true
+            "x-timestamp": Date.now(),
+            "x-sent": true
         }
     };
     return res.sendFile(req.params.file, options);
@@ -150,6 +150,6 @@ setInterval(function(){
 // current trains
 setInterval(function(){
     currentStops = trainPositions(mtaFeed);
-    io.emit('feed update', currentStops);
-} , 5 * 1000)
+    io.emit("feed update", currentStops);
+} , 10 * 1000)
 
