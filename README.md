@@ -26,5 +26,3 @@ Set the following in a .env file or as environment variables:
     MTA_KEY=xXx_mY-sWEET-mta-kEY_xXx
     PORT=3000
     UPDATE_INTERVAL=5
-
-borrowed heavily from https://github.com/mroth/mta2json

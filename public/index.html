@@ -7,7 +7,7 @@
       body { font: 13px Helvetica, Arial;
              font-weight: bold;
              color: white;
-             background:url(/the-big-board.jpeg); 
+             background:url(/images/the-big-board.jpeg); 
              background-repeat: no-repeat; 
              background-color: black;}
   
@@ -16,7 +16,7 @@
   </head>
   <body>
 
-<img src="/light.png" class="lights"></img>
+<img src="/images/light.png" class="lights"></img>
 <ul id="messages"></ul>
   
 <script src="/socket.io/socket.io.js"></script>
@@ -110,7 +110,7 @@ L29S,Canarsie - Rockaway Pkwy,40.646654,-73.901850,,
       var station = msg[i];
       stopNumber = station.substr(1,2);
       stopPosition = stopPositions[stopNumber] - 5; 
-      $('body').append($('<img src="/light.png" class="lights" id="' +
+      $('body').append($('<img src="/images/light.png" class="lights" id="' +
         station + '" style="left: ' + stopPosition + 'px;" title="' +
         station + '">'));
     }
@@ -120,5 +120,4 @@ L29S,Canarsie - Rockaway Pkwy,40.646654,-73.901850,,
 
   </body>
 </html>
-
 

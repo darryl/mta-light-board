@@ -1,21 +1,23 @@
 {
   "name": "mta-reatime-light-board",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "show present location of L trains",
   "private": true,
   "main": "server.js",
-  "scripts": {
-    "test": ""
-  },
-  "author": "darryl",
-  "license": "ISC",
   "dependencies": {
-    "dotenv": "^0.4.0",
-    "express": "~4.10.2",
-    "protobufjs": "~2.0.4",
-    "socket.io": "^1.2.0"
+    "cookie-parser": "~1.4.4",
+    "debug": "~2.6.9",
+    "dotenv": "^16.4.5",
+    "express": "^4.18.3",
+    "http-errors": "~1.6.3",
+    "morgan": "~1.9.1",
+    "protobufjs": "^7.2.6",
+    "pug": "^3.0.2",
+    "socket.io": "^4.7.4"
   },
-  "engines": {
-    "node": "0.10.x"
+  "devDependencies": {
+    "@eslint/js": "^9.2.0",
+    "eslint": "^9.2.0",
+    "globals": "^15.1.0"
   }
 }

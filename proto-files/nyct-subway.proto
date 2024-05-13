@@ -1,6 +1,7 @@
 //
 // NYCT Subway extensions for the GTFS-realtime protocol.
 //
+
 option java_package = "com.google.transit.realtime"; 
 
 import "gtfs-realtime.proto";
@@ -46,8 +47,8 @@ message NyctTripDescriptor {
   // 
   // The first character represents the trip type designator. 0 identifies a
   // scheduled revenue trip. Other revenue trip values that are a result of a
-  // change to the base schedule include; [= reroute], [/ skip stop], [$ turn
-  // train] also known as shortly lined service.  
+  // change to the base schedule include; reroute,  skip stop,  turn
+  // train also known as shortly lined service.  
   // 
   // The second character 6 represents the trip line i.e. number 6 train The
   // third set of characters identify the decoded origin time. The last
