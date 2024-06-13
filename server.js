@@ -109,18 +109,18 @@ var updateFeed = function(){
         p('from mta data ' + Object.getOwnPropertyNames( mtaFeed ), 2);
       });
     });
-  } catch (e) {
+  }catch (e) {
     // Intermittant network problems (DNS, Connection reset)
-    if (e === ENOTFOUND || e === ECONNRESET) {
-      p('API connection problem for ' + URL);
+    // if (e === ENOTFOUND || e === ECONNRESET) {
+    //   p('API connection problem for ' + URL);
       console.error(e.name);
       console.error(e.message);
-    } else {
-      p('Error: ')
-      console.error(e.name);
-      console.error(e.message);
-    }
-  }
+    // } else {
+    //   p('Error: ')
+    //   console.error(e.name);
+    //   console.error(e.message);
+    // }
+  } 
 }
 
 updateFeed();
